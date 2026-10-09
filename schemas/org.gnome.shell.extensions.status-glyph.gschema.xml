@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='utf-8'?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.status-glyph" path="/org/gnome/shell/extensions/status-glyph/">
+    <key name="primary-metric" type="s">
+      <default>'battery'</default>
+      <choices>
+        <choice value="battery" />
+        <choice value="wifi" />
+        <choice value="bluetooth" />
+        <choice value="cpu" />
+        <choice value="ram" />
+        <choice value="temperature" />
+      </choices>
+      <summary>Primary metric</summary>
+    </key>
+    <key name="primary-style" type="s">
+      <default>'bar'</default>
+      <choices>
+        <choice value="bar" />
+        <choice value="dots" />
+      </choices>
+      <summary>Primary style</summary>
+    </key>
+    <key name="primary-invert" type="b">
+      <default>false</default>
+      <summary>Primary invert</summary>
+    </key>
+    <key name="primary-reverse" type="b">
+      <default>false</default>
+      <summary>Primary reverse</summary>
+    </key>
+    <key name="center-metric" type="s">
+      <default>'bluetooth'</default>
+      <choices>
+        <choice value="battery" />
+        <choice value="wifi" />
+        <choice value="bluetooth" />
+        <choice value="cpu" />
+        <choice value="ram" />
+        <choice value="temperature" />
+      </choices>
+      <summary>Center metric</summary>
+    </key>
+    <key name="center-style" type="s">
+      <default>'dots'</default>
+      <choices>
+        <choice value="bar" />
+        <choice value="dots" />
+      </choices>
+      <summary>Center style</summary>
+    </key>
+    <key name="center-invert" type="b">
+      <default>false</default>
+      <summary>Center invert</summary>
+    </key>
+    <key name="center-reverse" type="b">
+      <default>false</default>
+      <summary>Center reverse</summary>
+    </key>
+    <key name="secondary-metric" type="s">
+      <default>'cpu'</default>
+      <choices>
+        <choice value="battery" />
+        <choice value="wifi" />
+        <choice value="bluetooth" />
+        <choice value="cpu" />
+        <choice value="ram" />
+        <choice value="temperature" />
+      </choices>
+      <summary>Secondary metric</summary>
+    </key>
+    <key name="secondary-style" type="s">
+      <default>'bar'</default>
+      <choices>
+        <choice value="bar" />
+        <choice value="dots" />
+      </choices>
+      <summary>Secondary style</summary>
+    </key>
+    <key name="secondary-invert" type="b">
+      <default>false</default>
+      <summary>Secondary invert</summary>
+    </key>
+    <key name="secondary-reverse" type="b">
+      <default>false</default>
+      <summary>Secondary reverse</summary>
+    </key>
+    <key name="size" type="i">
+      <default>112</default>
+      <range min="48" max="256" />
+      <summary>Size</summary>
+    </key>
+    <key name="opacity" type="d">
+      <default>1.0</default>
+      <range min="0.1" max="1.0" />
+      <summary>Opacity</summary>
+    </key>
+    <key name="custom-colors" type="b">
+      <default>false</default>
+      <summary>Custom colors</summary>
+    </key>
+    <key name="active-color" type="s">
+      <default>'#3584e4'</default>
+      <summary>Active color</summary>
+    </key>
+    <key name="inactive-color" type="s">
+      <default>'#ffffff'</default>
+      <summary>Inactive color</summary>
+    </key>
+    <key name="monitor" type="i">
+      <default>-1</default>
+      <range min="-1" max="15" />
+      <summary>Monitor</summary>
+    </key>
+    <key name="position-x" type="d">
+      <default>0.90</default>
+      <range min="0.0" max="1.0" />
+      <summary>Position x</summary>
+    </key>
+    <key name="position-y" type="d">
+      <default>0.15</default>
+      <range min="0.0" max="1.0" />
+      <summary>Position y</summary>
+    </key>
+  </schema>
+</schemalist>

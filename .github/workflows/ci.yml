@@ -1,0 +1,21 @@
+name: Validate and package
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: sudo apt-get update && sudo apt-get install -y libglib2.0-bin
+      - run: npm run check
+      - run: npm test
+      - run: bash -n scripts/install.sh
+      - run: npm run pack
+      - uses: actions/upload-artifact@v4
+        with:
+          name: status-glyph-build
+          path: dist/*.zip

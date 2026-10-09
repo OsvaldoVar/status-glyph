@@ -1,0 +1,9 @@
+{
+  "uuid": "status-glyph@osvaldovar.github.io",
+  "name": "Status Glyph",
+  "description": "A compact desktop glyph with three configurable system metrics.",
+  "shell-version": ["49", "50", "51"],
+  "settings-schema": "org.gnome.shell.extensions.status-glyph",
+  "version": 1,
+  "url": "https://github.com/OsvaldoVar/status-glyph"
+}

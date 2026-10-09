@@ -1,0 +1,613 @@
+PLAN DE DESARROLLO — EXTENSIÓN GNOME "STATUS GLYPH"
+
+OBJETIVO GENERAL
+Crear una extensión de GNOME Shell compuesta por un único widget gráfico compacto con tres canales de información configurables. Cada canal podrá representar una métrica del sistema mediante barras o puntos, manteniendo una estética coherente con GNOME y Adwaita.
+
+El widget debe:
+- Integrarse visualmente con GNOME.
+- Adaptarse automáticamente al modo claro y oscuro.
+- Permitir colores personalizados.
+- Tener tres partes configurables.
+- Permitir elegir una métrica distinta para cada parte.
+- Permitir representaciones por barras o puntos.
+- Mantener proporciones y geometría consistentes.
+- Consumir pocos recursos.
+- Usar señales y D-Bus cuando sea posible.
+- Ser suficientemente estable para publicarse en extensions.gnome.org.
+
+
+1. CONCEPTO VISUAL
+
+El widget tendrá tres partes:
+
+PARTE A — PRINCIPAL
+- Es la parte visualmente más grande.
+- Puede mostrarse como:
+  - Barra/arco grande.
+  - Conjunto de puntos grande.
+
+PARTE B — CENTRAL
+- Es la parte central.
+- Puede mostrarse como:
+  - Círculo.
+  - Cuatro puntos organizados como un cuadrado 2x2.
+
+PARTE C — SECUNDARIA
+- Es más pequeña que la parte A.
+- Se coloca debajo de la parte central.
+- Puede mostrarse como:
+  - Barra/arco pequeño.
+  - Conjunto de puntos pequeño.
+
+Jerarquía visual aproximada:
+- Parte A: 100% de escala.
+- Parte B: 25–30% del diámetro principal.
+- Parte C: 65–75% del ancho de la Parte A.
+
+
+2. EJEMPLO DE CONFIGURACIÓN
+
+Parte A:
+- Métrica: Batería
+- Representación: Barra grande
+
+Parte B:
+- Métrica: Bluetooth
+- Representación: Cuatro puntos 2x2
+
+Parte C:
+- Métrica: Temperatura de CPU
+- Representación: Barra pequeña
+
+Cada parte será independiente, pero todas formarán un único símbolo visual.
+
+
+3. CATÁLOGO INICIAL DE MÉTRICAS
+
+Primera versión:
+- Batería %
+- Wi-Fi
+- Bluetooth
+- Uso de CPU
+- Uso de RAM
+- Temperatura de CPU
+
+Versiones posteriores:
+- Consumo de batería en watts
+- Volumen
+- Brillo
+- VPN
+- Perfil de energía
+- Uso de GPU
+- Temperatura de GPU
+- Velocidad de red
+- Uso de disco
+- RPM de ventiladores
+
+
+4. NORMALIZACIÓN DE DATOS
+
+Todos los providers deben entregar valores normalizados.
+
+Ejemplo:
+
+{
+    value: 0.73,
+    state: "normal",
+    available: true,
+    label: "73%"
+}
+
+El valor principal será siempre de 0.0 a 1.0.
+
+Ejemplos:
+- Batería 73% -> 0.73
+- CPU 42% -> 0.42
+- Wi-Fi 80% -> 0.80
+- RAM 65% -> 0.65
+
+Para temperaturas se definirá un rango configurable o fijo razonable para convertir el valor a 0.0–1.0.
+
+
+5. ARQUITECTURA DEL PROYECTO
+
+status-glyph/
+├── extension.js
+├── metadata.json
+├── stylesheet.css
+├── prefs.js
+├── schemas/
+│   └── org.gnome.shell.extensions.status-glyph.gschema.xml
+├── widget/
+│   ├── StatusGlyph.js
+│   ├── BarRenderer.js
+│   ├── DotRenderer.js
+│   └── Geometry.js
+├── providers/
+│   ├── Provider.js
+│   ├── BatteryProvider.js
+│   ├── NetworkProvider.js
+│   ├── BluetoothProvider.js
+│   ├── CpuProvider.js
+│   ├── MemoryProvider.js
+│   └── TemperatureProvider.js
+└── utils/
+    ├── Theme.js
+    └── Colors.js
+
+
+6. RESPONSABILIDADES DE CADA MÓDULO
+
+extension.js
+- Inicializar la extensión.
+- Crear el widget.
+- Añadirlo a GNOME Shell.
+- Limpiar correctamente recursos en disable().
+
+StatusGlyph.js
+- Administrar las tres partes.
+- Obtener la configuración.
+- Recibir valores de providers.
+- Seleccionar el renderer adecuado.
+
+BarRenderer.js
+- Dibujar arcos/barras.
+- Dibujar progreso.
+- Dibujar track inactivo.
+- Interpolar cambios visuales.
+
+DotRenderer.js
+- Dibujar grupos de puntos.
+- Administrar puntos activos/inactivos.
+- Mantener geometrías fijas.
+
+Geometry.js
+- Centralizar todas las proporciones.
+- Escalar el widget sin deformarlo.
+- Mantener consistencia entre tamaños.
+
+Provider.js
+- Interfaz base para todos los providers.
+- Métodos comunes:
+  - start()
+  - stop()
+  - getValue()
+  - connect/change
+  - available
+
+Providers concretos
+- Obtener datos del sistema.
+- Convertirlos a valores normalizados.
+- Emitir cambios solo cuando sea necesario.
+
+
+7. SISTEMA DE COLORES
+
+Modo predeterminado:
+FOLLOW GNOME
+
+La extensión debe adaptarse a:
+- Modo claro.
+- Modo oscuro.
+- Colores foreground del tema.
+- Color de acento cuando sea posible.
+
+Modelo recomendado:
+- Activo: color foreground al 100%.
+- Intermedio: mismo color con aproximadamente 55% de opacidad.
+- Inactivo: mismo color con aproximadamente 25% de opacidad.
+
+Modo personalizado:
+CUSTOM
+
+Opciones:
+- Color activo.
+- Color inactivo.
+- Fondo opcional.
+- Uso opcional del color de acento de GNOME.
+
+Evitar:
+- Gradientes decorativos.
+- Glow.
+- Sombras fuertes.
+- Colores distintos para cada punto sin una razón funcional.
+
+
+8. RENDERIZADO DE BARRAS
+
+La representación de barras tendrá:
+
+Parte A:
+- Arco principal grande.
+- Track completo.
+- Progreso parcial según valor.
+
+Parte B:
+- Círculo central.
+- Puede representar estado binario o nivel.
+
+Parte C:
+- Arco secundario.
+- Más pequeño que el principal.
+
+Las barras deben:
+- Mantener extremos redondeados.
+- Escalar correctamente.
+- Dibujarse dinámicamente.
+- No depender de imágenes rasterizadas.
+
+Preferencia:
+- Cairo/Clutter o la opción más adecuada disponible en GJS/GNOME Shell.
+
+
+9. RENDERIZADO DE PUNTOS
+
+Parte A:
+- Grupo de puntos grande.
+
+Parte B:
+- Siempre cuatro puntos en matriz 2x2.
+
+Ejemplo:
+● ●
+● ●
+
+Parte C:
+- Grupo de puntos más pequeño.
+
+Los puntos deben representar niveles discretos.
+
+Ejemplo de 4 niveles:
+0–25%
+25–50%
+50–75%
+75–100%
+
+Debe definirse un orden visual consistente para activar los puntos.
+
+
+10. COMBINACIÓN DE REPRESENTACIONES
+
+Cada parte podrá tener un conjunto limitado de representaciones.
+
+Parte A:
+- Barra grande.
+- Puntos grandes.
+
+Parte B:
+- Círculo.
+- Cuatro puntos 2x2.
+
+Parte C:
+- Barra pequeña.
+- Puntos pequeños.
+
+No se permitirá cualquier combinación arbitraria si rompe la estética.
+
+
+11. CONFIGURACIÓN DEL USUARIO
+
+Usar GTK4 + Libadwaita.
+
+Pantalla principal:
+
+STATUS GLYPH
+
+Datos
+
+Primary
+Battery
+
+Center
+Wi-Fi
+
+Secondary
+CPU Temperature
+
+
+Appearance
+
+Colors
+Follow GNOME
+
+Size
+112 px
+
+Opacity
+100%
+
+
+Behavior
+
+Monitor
+Primary
+
+Cada parte tendrá su propia página:
+
+PRIMARY
+
+Metric
+Battery
+
+Representation
+Large Arc
+
+Direction
+Clockwise
+
+Invert
+Off
+
+
+12. TAMAÑOS
+
+Presets:
+- Small: 72 px
+- Medium: 112 px
+- Large: 160 px
+
+Opcional:
+- Custom: 48–256 px
+
+Toda la geometría debe expresarse internamente en coordenadas normalizadas de 0.0 a 1.0.
+
+pixel = normalized_value * widget_size
+
+Esto permitirá escalar sin deformaciones.
+
+
+13. EFICIENCIA
+
+Regla principal:
+No crear timers independientes innecesarios.
+
+Usar:
+- UPower para batería.
+- NetworkManager por D-Bus para Wi-Fi.
+- BlueZ por D-Bus para Bluetooth.
+- Señales/eventos cuando existan.
+
+Polling solo cuando sea necesario:
+- CPU: aproximadamente cada 1 s.
+- RAM: aproximadamente cada 2 s.
+- Temperatura: aproximadamente cada 5 s.
+
+Utilizar un scheduler compartido.
+
+
+14. ESTADOS DE PROVIDER
+
+Todos los providers deben soportar:
+
+- available
+- unavailable
+- disabled
+- error
+
+Si un provider no está disponible:
+- No debe provocar errores visibles.
+- La parte correspondiente puede mostrarse con baja opacidad.
+- La extensión debe continuar funcionando.
+
+
+15. ANIMACIONES
+
+Solo animaciones discretas.
+
+Objetivo:
+- 150–250 ms.
+- Ease-out.
+- Sin animaciones continuas.
+
+Cuando una métrica cambia:
+65% -> 72%
+
+La barra debe interpolarse suavemente.
+
+Los puntos pueden cambiar de estado con un fade corto.
+
+No mantener animaciones activas cuando el widget está estático.
+
+
+16. PRINCIPIOS DE ESTÉTICA GNOME
+
+El widget debe usar:
+- Formas simples.
+- Geometría limpia.
+- Espaciado generoso.
+- Colores del sistema.
+- Transparencias moderadas.
+- Animaciones discretas.
+- Ausencia de texto salvo necesidad real.
+
+Evitar:
+- Gradientes llamativos.
+- Glow.
+- Sombras grandes.
+- Bordes decorativos innecesarios.
+- Efectos tipo gaming.
+- Exceso de opciones visuales.
+
+Objetivo:
+Que parezca un componente nativo de GNOME.
+
+
+17. FASES DE DESARROLLO
+
+FASE 1 — GEOMETRÍA Y RENDERER
+Objetivo:
+Conseguir que el widget se vea correctamente sin datos reales.
+
+Implementar:
+- StatusGlyph.
+- Geometry.
+- BarRenderer.
+- DotRenderer.
+- Tamaños S/M/L.
+- Estados 0%, 25%, 50%, 75%, 100%.
+- Modo claro y oscuro simulado.
+
+Criterio de finalización:
+Todas las combinaciones deben verse equilibradas y consistentes.
+
+
+FASE 2 — SISTEMA DE COLORES
+Implementar:
+- Follow GNOME.
+- Dark/light automático.
+- Foreground del tema.
+- Opacidad activo/inactivo.
+- Colores personalizados.
+- Color de acento opcional.
+
+Criterio:
+El widget debe integrarse visualmente con Adwaita.
+
+
+FASE 3 — PROVIDERS
+Implementar:
+- BatteryProvider.
+- NetworkProvider.
+- BluetoothProvider.
+- CpuProvider.
+- MemoryProvider.
+- TemperatureProvider.
+
+Criterio:
+Todos deben producir datos normalizados y limpiar sus recursos correctamente.
+
+
+FASE 4 — PREFERENCIAS
+Implementar:
+- GTK4.
+- Libadwaita.
+- Selector de métrica por parte.
+- Selector de representación.
+- Tamaño.
+- Colores.
+- Monitor.
+- Opacidad.
+
+Criterio:
+La configuración debe parecer una aplicación GNOME nativa.
+
+
+FASE 5 — INTEGRACIÓN Y PERSISTENCIA
+Implementar:
+- GSettings.
+- Restaurar configuración.
+- Cambio dinámico de providers.
+- Cambio de tema en caliente.
+- Cambio de monitor.
+
+
+FASE 6 — OPTIMIZACIÓN
+Revisar:
+- Uso de CPU.
+- Timers.
+- Señales.
+- D-Bus.
+- Memoria.
+- Renderizado.
+- Recursos liberados en disable().
+
+
+FASE 7 — PRUEBAS
+Probar:
+- 100 ciclos enable/disable.
+- Cambios repetidos light/dark.
+- Wi-Fi on/off.
+- Bluetooth on/off.
+- AC/batería.
+- Suspensión/reanudación.
+- Cambio de monitor principal.
+- Hotplug de monitor.
+- Providers no disponibles.
+- Cambio de configuración en caliente.
+
+
+FASE 8 — PUBLICACIÓN
+Preparar:
+- README.
+- Capturas.
+- Licencia.
+- Metadata.
+- Changelog.
+- Compatibilidad declarada.
+- ZIP final.
+- Revisión de guidelines de GNOME Extensions.
+
+
+18. ROADMAP
+
+v0.1
+- Tres partes.
+- Barras y puntos.
+- Battery.
+- Wi-Fi.
+- Bluetooth.
+- CPU.
+- RAM.
+- Temperatura.
+- Light/dark automático.
+- Colores personalizados.
+- Tamaño configurable.
+- Posición configurable.
+
+v0.2
+- Volumen.
+- Brillo.
+- Consumo en watts.
+- VPN.
+- Perfil de energía.
+- Animaciones refinadas.
+- Mejor soporte multimonitor.
+- Presets.
+
+v1.0
+- Compatibilidad estable con versiones actuales de GNOME.
+- Sin leaks.
+- Enable/disable estable.
+- Suspensión/reanudación.
+- Cambio de tema dinámico.
+- Hotplug de monitores.
+- Providers robustos.
+- Interfaz de preferencias pulida.
+- Publicación en extensions.gnome.org.
+
+
+19. CRITERIOS DE CALIDAD
+
+La extensión no debe considerarse lista si:
+- Deja timers después de disable().
+- Deja señales conectadas.
+- Consume CPU de forma constante sin motivo.
+- Rompe al perder Wi-Fi o Bluetooth.
+- Se ve diferente de Adwaita sin que el usuario lo haya pedido.
+- Cambia de tamaño de forma inconsistente.
+- Tiene geometrías diferentes entre providers.
+- Requiere ejecutar comandos externos continuamente.
+
+
+20. OBJETIVO FINAL
+
+Status Glyph debe sentirse como un indicador visual nativo de GNOME:
+
+- Pequeño.
+- Configurable.
+- Visualmente limpio.
+- Informativo sin usar demasiado texto.
+- Adaptable a modo claro/oscuro.
+- Integrado con Adwaita.
+- Eficiente.
+- Modular internamente.
+- Fácil de configurar para el usuario final.
+
+La prioridad será siempre:
+
+1. Consistencia visual.
+2. Integración con GNOME.
+3. Estabilidad.
+4. Bajo consumo.
+5. Configurabilidad.
+6. Cantidad de funciones.

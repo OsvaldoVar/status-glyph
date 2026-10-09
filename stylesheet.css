@@ -1,0 +1,2 @@
+/* Inherit GNOME Shell foreground; custom colors are applied by the renderer. */
+.status-glyph { padding: 0; }
