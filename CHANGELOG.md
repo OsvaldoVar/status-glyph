@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — 2026-10-11
+
+- Arcos concéntricos con un mismo centro y radio, proporción visible 2/3–1/3 y dos separaciones de 22°.
+- Barras un 18% más gruesas y puntos exteriores más grandes.
+- Centro ampliado al 30% del diámetro de la trayectoria exterior; grupo 2×2 con el mismo tamaño exterior.
+- Ocho puntos superiores y cuatro inferiores, manteniendo espacio visible en todas las combinaciones.
+- Pruebas de proporciones, separación, límites y tamaño central.
+
 ## 0.1.0 — 2026-10-09
 
 - Prototipo de tres canales con arcos y puntos.

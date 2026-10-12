@@ -4,6 +4,10 @@
 
 `widget/StatusGlyph.js` conecta GSettings y los proveedores. `Geometry.js` centraliza coordenadas normalizadas. `Renderers.js` dibuja directamente con Cairo; no usa imágenes rasterizadas ni procesos externos.
 
+Los dos arcos comparten centro (0.5, 0.5) y radio 0.36. Dos separaciones de 22° distinguen los canales y dejan al menos 2 px entre los puntos extremos al tamaño mínimo de 48 px. El recorrido visible restante se reparte exactamente 2:1; al excluir los espacios, la parte principal conserva 2/3 y la inferior 1/3. El trazo mide 0.065 del tamaño del widget, frente al anterior 0.055.
+
+El círculo central tiene radio 0.108: su diámetro equivale al 30% del diámetro de la trayectoria exterior. El grupo central 2×2 ocupa el mismo ancho y alto. Los puntos exteriores tienen radio 0.047 y se distribuyen en ocho arriba y cuatro abajo; los centrales tienen radio 0.043. `dotPositions()` proporciona la misma geometría al renderer, pruebas y previsualización.
+
 `Registry` comparte proveedores con conteo de referencias. Solo existen proveedores elegidos por los tres canales. Cada proveedor emite objetos `{value, label, available, state}`. Los cambios idénticos no provocan repintado.
 
 `DBusProvider` vigila disponibilidad del servicio y escucha PropertiesChanged/ObjectManager. Las consultas son asíncronas, tienen timeout y se cancelan al desactivar. Un indicador de cambio pendiente agrupa eventos mientras hay una consulta en curso. Los resultados de una conexión antigua se descartan.

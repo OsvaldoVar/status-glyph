@@ -1,7 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {clamp, reading, parseCpu, cpuUsage, memoryUsage, activeDots, parseHex} from '../utils/Values.js';
-import {CHANNELS, GEOMETRY} from '../widget/Geometry.js';
 import {Provider} from '../providers/Provider.js';
 
 test('invalid and out-of-range metrics remain bounded', () => {
@@ -31,20 +30,6 @@ test('dot thresholds preserve exact empty/full states', () => {
 test('custom colors accept only complete hex triplets', () => {
     assert.deepEqual(parseHex('#ff0080'), [1, 0, 128 / 255]);
     for (const value of ['#abc', 'red', '#ffffff00', '#xyzxyz']) assert.equal(parseHex(value), null);
-});
-test('all dot centers and strokes stay within the drawing surface', () => {
-    for (const channel of CHANNELS) {
-        const g = GEOMETRY[channel];
-        if (channel === 'center') continue;
-        for (let i = 0; i <= 100; i++) {
-            const angle = g.start + (g.end - g.start) * i / 100;
-            const x = g.x + Math.cos(angle) * g.radius;
-            const y = g.y + Math.sin(angle) * g.radius;
-            assert.ok(x >= 0.033 && x <= 0.967 && y >= 0.033 && y <= 0.967);
-        }
-    }
-    assert.ok(GEOMETRY.secondary.radius < GEOMETRY.primary.radius);
-    assert.equal(GEOMETRY.center.count, 4);
 });
 test('provider deduplicates updates, unsubscribes and ignores late completion', () => {
     const provider = new Provider();

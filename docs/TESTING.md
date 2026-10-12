@@ -2,12 +2,14 @@
 
 ## Ejecutado en el entorno de desarrollo
 
-- 7 pruebas unitarias: rangos, CPU y guest counters, MemAvailable, discretización, colores, límites geométricos y ciclo de vida del proveedor.
+- 11 pruebas unitarias: rangos, CPU y guest counters, MemAvailable, discretización, colores, ciclo de vida del proveedor y cinco controles geométricos de proporción 2:1, separaciones, puntos inferiores, tamaño central y límites de dibujo.
 - Sintaxis de módulos JavaScript y resolución de imports locales.
 - Lectura de metadata y estructura XML de 20 claves GSettings.
 - Validación sintáctica del instalador.
 
-No se ha ejecutado GJS ni GNOME Shell. El compilador GLib no está disponible en el entorno inicial: CI está configurado para compilar el esquema con `--strict` antes de empaquetar. La configuración de CI existe; su ejecución remota aún no está verificada.
+No se ha ejecutado GJS ni GNOME Shell. El compilador GLib no está disponible en el entorno inicial. GitHub Actions sí validó el esquema con `--strict`, ejecutó las pruebas y generó el paquete en la primera compilación; cada cambio vuelve a ejecutar ese workflow.
+
+Para revisar la geometría sin GNOME, ejecutar `node scripts/preview.mjs`. La previsualización SVG usa los comandos del renderer de producción, a nivel completo en las ocho combinaciones; no simula la integración con Shell.
 
 ## Pendiente en GNOME real
 
