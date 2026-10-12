@@ -2,21 +2,21 @@ export const CHANNELS = ['primary', 'center', 'secondary'];
 
 export const STROKE_WIDTH = 0.065;
 export const RING = {x: 0.5, y: 0.5, radius: 0.36};
-// Eighteen equally spaced positions: 12 upper, 4 lower, 1 empty on each side.
-// The two empty positions belong to the remaining third of the circumference.
-export const TOTAL_SLOTS = 18;
+// Fourteen equally spaced positions: 8 upper, 4 lower, 1 empty on each side.
+// Blank positions separate the channels and never render a point.
+export const TOTAL_SLOTS = 14;
 export const SLOT_ANGLE = 2 * Math.PI / TOTAL_SLOTS;
 const lowerStart = Math.PI / 2 - 2 * SLOT_ANGLE;
 const lowerEnd = Math.PI / 2 + 2 * SLOT_ANGLE;
 const upperStart = lowerEnd + SLOT_ANGLE;
-const upperEnd = upperStart + 12 * SLOT_ANGLE;
+const upperEnd = upperStart + 8 * SLOT_ANGLE;
 // Inset centerlines so rounded caps stay inside their allocated sectors.
 const capInset = Math.asin(STROKE_WIDTH / (2 * RING.radius));
 
 export const GEOMETRY = {
     primary: {...RING, sectorStart: upperStart, sectorEnd: upperEnd,
         start: upperStart + capInset, end: upperEnd - capInset,
-        dotStart: upperStart + SLOT_ANGLE / 2, dotStep: SLOT_ANGLE, count: 12, dotRadius: 0.047},
+        dotStart: upperStart + SLOT_ANGLE / 2, dotStep: SLOT_ANGLE, count: 8, dotRadius: 0.047},
     center: {x: RING.x, y: RING.y, radius: RING.radius * 0.3, count: 4,
         dotRadius: 0.043, dotOffset: RING.radius * 0.3 - 0.043},
     secondary: {...RING, sectorStart: lowerStart, sectorEnd: lowerEnd,

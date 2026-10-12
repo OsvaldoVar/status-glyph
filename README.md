@@ -1,6 +1,6 @@
 # Status Glyph
 
-Un único widget de escritorio para GNOME Shell con tres canales de información independientes. El círculo se divide en 18 posiciones iguales: 12 arriba, 4 abajo y 2 vacías, una en cada lateral. Los puntos conservan la misma separación angular de 20°; los arcos ocupan los sectores correspondientes, respetando los espacios laterales. El centro tiene un diámetro del 30% del círculo y puede mostrarse como círculo o cuatro puntos en matriz 2×2.
+Un único widget de escritorio para GNOME Shell con tres canales de información independientes. El círculo se divide en 14 posiciones iguales: 8 puntos arriba, 4 abajo y 2 posiciones intermedias invisibles, una en cada lateral. Los puntos conservan un paso angular uniforme de 360°/14; los arcos ocupan los sectores correspondientes, respetando los espacios laterales. El centro tiene un diámetro del 30% del círculo y puede mostrarse como círculo o cuatro puntos en matriz 2×2.
 
 ![Geometría de las ocho combinaciones a nivel completo](docs/GEOMETRY_PREVIEW.svg)
 

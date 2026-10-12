@@ -6,16 +6,17 @@ const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-1
     `${actual} differs from ${expected}`);
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
-test('one circle has 18 equal slots: 12 upper, 4 lower and one blank on each side', () => {
+test('one circle has 14 equal slots: 8 upper, 4 lower and one blank on each side', () => {
     const {primary: upper, secondary: lower} = GEOMETRY;
     assert.equal(upper.x, lower.x);
     assert.equal(upper.y, lower.y);
     assert.equal(upper.radius, lower.radius);
-    assert.equal(TOTAL_SLOTS, 18);
-    close(SLOT_ANGLE, Math.PI / 9);
+    assert.equal(TOTAL_SLOTS, 14);
+    close(SLOT_ANGLE, Math.PI / 7);
     const topSweep = upper.sectorEnd - upper.sectorStart;
     const bottomSweep = lower.sectorEnd - lower.sectorStart;
-    close(topSweep / (2 * Math.PI), 2 / 3);
+    close(topSweep / SLOT_ANGLE, 8);
+    close(topSweep / (topSweep + bottomSweep), 2 / 3);
     close(bottomSweep / SLOT_ANGLE, 4);
     close(upper.sectorStart - lower.sectorEnd, SLOT_ANGLE);
     close(lower.sectorStart + 2 * Math.PI - upper.sectorEnd, SLOT_ANGLE);
@@ -52,7 +53,7 @@ test('lower channel has four distinct enlarged points on the bottom of the circl
     const points = dotPositions(GEOMETRY.secondary);
     assert.equal(points.length, 4);
     const upper = dotPositions(GEOMETRY.primary);
-    assert.equal(upper.length, 12);
+    assert.equal(upper.length, 8);
     for (const point of points) {
         assert.ok(point.y > GEOMETRY.secondary.y);
         assert.ok(point.radius > 0.029);
