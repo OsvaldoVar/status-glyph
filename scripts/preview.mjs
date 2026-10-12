@@ -57,7 +57,7 @@ for (let index = 0; index < 8; index++) {
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="540" viewBox="0 0 800 540">` +
     '<rect width="800" height="540" rx="20" fill="#242424"/>' +
     '<g font-family="sans-serif"><text x="24" y="38" fill="#f6f5f4" font-size="25">Status Glyph</text>' +
-    '<text x="24" y="64" fill="#c0bfbc" font-size="14">Mismo círculo · proporción 2:1 · centro ampliado · separación visible</text>' +
+    '<text x="24" y="64" fill="#c0bfbc" font-size="14">18 posiciones · 12 arriba · 4 abajo · un espacio a cada lado</text>' +
     cells.join('') + '</g></svg>\n';
 const destination = resolve(root, 'docs/GEOMETRY_PREVIEW.svg');
 await writeFile(destination, svg);

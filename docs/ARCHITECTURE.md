@@ -4,9 +4,9 @@
 
 `widget/StatusGlyph.js` conecta GSettings y los proveedores. `Geometry.js` centraliza coordenadas normalizadas. `Renderers.js` dibuja directamente con Cairo; no usa imágenes rasterizadas ni procesos externos.
 
-Los dos arcos comparten centro (0.5, 0.5) y radio 0.36. Dos separaciones de 22° distinguen los canales y dejan al menos 2 px entre los puntos extremos al tamaño mínimo de 48 px. El recorrido visible restante se reparte exactamente 2:1; al excluir los espacios, la parte principal conserva 2/3 y la inferior 1/3. El trazo mide 0.065 del tamaño del widget, frente al anterior 0.055.
+Los dos arcos comparten centro (0.5, 0.5) y radio 0.36. El círculo se divide en 18 posiciones de 20°: 12 superiores, 4 inferiores y una vacía en cada lateral. El sector principal ocupa 240°; el inferior, 80°; los 40° restantes son espacios. Los centros de los puntos se ubican en el centro de cada posición, con paso angular uniforme. Los extremos de los arcos se acortan lo suficiente para mantener sus tapas redondeadas dentro de los sectores asignados. Las cuatro combinaciones de barras/puntos conservan al menos 2 px de separación entre canales al tamaño mínimo de 48 px. El trazo mide 0.065 del tamaño del widget.
 
-El círculo central tiene radio 0.108: su diámetro equivale al 30% del diámetro de la trayectoria exterior. El grupo central 2×2 ocupa el mismo ancho y alto. Los puntos exteriores tienen radio 0.047 y se distribuyen en ocho arriba y cuatro abajo; los centrales tienen radio 0.043. `dotPositions()` proporciona la misma geometría al renderer, pruebas y previsualización.
+El círculo central tiene radio 0.108: su diámetro equivale al 30% del diámetro de la trayectoria exterior. El grupo central 2×2 ocupa el mismo ancho y alto. Los puntos exteriores tienen radio 0.047 y se distribuyen en doce arriba y cuatro abajo; los centrales tienen radio 0.043. `dotPositions()` proporciona la misma geometría al renderer, pruebas y previsualización.
 
 `Registry` comparte proveedores con conteo de referencias. Solo existen proveedores elegidos por los tres canales. Cada proveedor emite objetos `{value, label, available, state}`. Los cambios idénticos no provocan repintado.
 

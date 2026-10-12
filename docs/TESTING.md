@@ -2,7 +2,7 @@
 
 ## Ejecutado en el entorno de desarrollo
 
-- 11 pruebas unitarias: rangos, CPU y guest counters, MemAvailable, discretización, colores, ciclo de vida del proveedor y cinco controles geométricos de proporción 2:1, separaciones, puntos inferiores, tamaño central y límites de dibujo.
+- 11 pruebas unitarias: rangos, CPU y guest counters, MemAvailable, discretización, colores, ciclo de vida del proveedor y cinco controles geométricos de 18 posiciones, separaciones laterales, 12/4 puntos equidistantes, tamaño central y límites de dibujo.
 - Sintaxis de módulos JavaScript y resolución de imports locales.
 - Lectura de metadata y estructura XML de 20 claves GSettings.
 - Validación sintáctica del instalador.
